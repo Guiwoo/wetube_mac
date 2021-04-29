@@ -1,4 +1,4 @@
-export const trending = (req,res) => res.render("home")
+export const trending = (req,res) => res.render("home",{pageTitle: 'Home'})
 
 export const search = (req,res)=>res.render("search")
 
