@@ -33,12 +33,24 @@ export const trending = (req,res) => {
 
 export const search = (req,res)=>res.render("search")
 
-export const handleEdit = (req,res) => res.render("edit",{fakeUser})
 
 export const watch = (req,res)=> {
     const {params:{id}}=req
     const video = videos[id-1]
     res.render("watch",{pageTitle:`Watch ${video.title}`, fakeUser,video});
+}
+
+export const getHandleEdit = (req,res) => {
+   const {params:{id}}=req
+   const video = (videos[id-1])
+   res.render("edit",{pageTitle:`Editing ${video.title}`,fakeUser,video})
+}
+
+export const postHandleEdit = (req,res) => {
+    const {params:{id}} = req
+    const {body:{title}} =req
+    videos[id-1].title = title
+    res.redirect(`/videos/${id}`)
 }
 
 export const deleteVideo = (req,res)=>res.send("Delete Video")
