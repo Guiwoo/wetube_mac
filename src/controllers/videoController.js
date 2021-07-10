@@ -1,37 +1,17 @@
+import videoModel from "../models/Video";
+
 const fakeUser = {
-  username: "guiwoo",
   loggedin: false,
+  username: "guiwoo",
 };
 
-let videos = [
-  {
-    title: "Hello",
-    rating: 5,
-    comments: 2,
-    createdAt: "2 mins ago",
-    view: 59,
-    id: 1,
-  },
-  {
-    title: "Second",
-    rating: 8,
-    comments: 32,
-    createdAt: "5 mins ago",
-    view: 30000,
-    id: 2,
-  },
-  {
-    title: "Third",
-    rating: 10,
-    comments: 100,
-    createdAt: "10 mins ago",
-    view: 12392193,
-    id: 3,
-  },
-];
-
-export const trending = (req, res) => {
-  return res.render("home", { pageTitle: "Home", fakeUser, videos });
+export const home = async (req, res) => {
+  try {
+    const videos = await videoModel.find({});
+    return res.render("home", { pageTitle: "Home", fakeUser, videos });
+  } catch (error) {
+    return res.render("Server-Error", { error });
+  }
 };
 
 export const search = (req, res) => res.render("search");
@@ -40,16 +20,14 @@ export const watch = (req, res) => {
   const {
     params: { id },
   } = req;
-  const video = videos[id - 1];
-  res.render("watch", { pageTitle: `Watch ${video.title}`, fakeUser, video });
+  res.render("watch", { pageTitle: `Watch `, fakeUser });
 };
 
 export const getHandleEdit = (req, res) => {
   const {
     params: { id },
   } = req;
-  const video = videos[id - 1];
-  res.render("edit", { pageTitle: `Editing ${video.title}`, fakeUser, video });
+  res.render("edit", { pageTitle: `Editing `, fakeUser });
 };
 
 export const postHandleEdit = (req, res) => {
@@ -59,7 +37,6 @@ export const postHandleEdit = (req, res) => {
   const {
     body: { title },
   } = req;
-  videos[id - 1].title = title;
   res.redirect(`/videos/${id}`);
 };
 
@@ -72,15 +49,5 @@ export const getUpload = (req, res) => {
 export const postUpload = (req, res) => {
   //will add a video to the videos array
   const { title } = req.body;
-  const newVideo = {
-    title,
-    rating: 0,
-    comments: 0,
-    createdAt: "1sec ago",
-    views: 0,
-    id: videos.length + 1,
-  };
-  videos.push(newVideo);
-
   return res.redirect("/");
 };
