@@ -7,14 +7,29 @@ const fakeUser = {
 
 export const home = async (req, res) => {
   try {
-    const videos = await videoModel.find({});
+    const videos = await videoModel.find({}).sort({ createdAt: "desc" });
     return res.render("home", { pageTitle: "Home", fakeUser, videos });
   } catch (error) {
     return res.render("Server-Error", { error });
   }
 };
 
-export const search = (req, res) => res.render("search");
+export const search = async (req, res) => {
+  const {
+    query: { keyword },
+  } = req;
+  let videos = [];
+  try {
+    videos = await videoModel.find({
+      title: {
+        $regex: new RegExp(keyword, "i"),
+      },
+    });
+  } catch (error) {
+    return res.render("404", { pageTitle: "Error", error });
+  }
+  res.render("search", { pageTitle: "Search", videos });
+};
 
 export const watch = async (req, res) => {
   try {
@@ -59,10 +74,17 @@ export const postHandleEdit = async (req, res) => {
   }
 };
 
-export const deleteVideo = (req, res) => res.send("Delete Video");
+export const deleteVideo = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  await videoModel.findByIdAndDelete(id);
+  return res.redirect("/");
+};
 
 export const getUpload = (req, res) => {
   return res.render("upload", { pageTitle: "Upload Video", fakeUser });
+  // what is different between and remove
 };
 
 export const postUpload = async (req, res) => {
