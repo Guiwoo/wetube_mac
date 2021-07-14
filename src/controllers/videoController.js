@@ -26,7 +26,7 @@ export const search = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.render("404", { pageTitle: "Error", error });
+    return res.status(400).render("404", { pageTitle: "Error", error });
   }
   res.render("search", { pageTitle: "Search", videos });
 };
@@ -39,7 +39,7 @@ export const watch = async (req, res) => {
     const video = await videoModel.findById(id);
     res.render("watch", { pageTitle: video.title, fakeUser, video });
   } catch (error) {
-    res.render("404", { pageTitle: "Can't found video", fakeUser });
+    res.status(400).render("404", { pageTitle: "Can't found video", fakeUser });
   }
 };
 
@@ -51,7 +51,7 @@ export const getHandleEdit = async (req, res) => {
     const video = await videoModel.findById(id);
     res.render("edit", { pageTitle: `Edit: ${video.title} `, fakeUser, video });
   } catch (error) {
-    res.render("404", { pageTitle: "Can't Edit" });
+    res.status(400).render("404", { pageTitle: "Can't Edit" });
   }
 };
 
@@ -70,7 +70,7 @@ export const postHandleEdit = async (req, res) => {
     res.redirect(`/videos/${id}`);
   } catch (e) {
     console.log(error);
-    res.render("404", { pageTitle: "Can't Edit" });
+    res.status(400).render("404", { pageTitle: "Can't Edit" });
   }
 };
 
@@ -99,8 +99,7 @@ export const postUpload = async (req, res) => {
     });
     return res.redirect("/");
   } catch (error) {
-    console.log(error);
-    return res.render("404", {
+    return status(400).res.render("404", {
       pageTitle: `Error`,
       fakeUser,
       error,
