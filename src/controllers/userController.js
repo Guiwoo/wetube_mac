@@ -72,7 +72,16 @@ export const logout = (req, res) => {
   return res.redirect("/");
 };
 
-export const handleEdit = (req, res) => res.send("Edit");
+export const getEdit = (req, res) => {
+  return res.render("editProfile", {
+    pageTitle: "Edit Profile",
+    user: req.session.user,
+  });
+};
+
+export const postEdit = (req, res) => {
+  return res.send("Edit profile");
+};
 
 export const startGithubLogin = (req, res) => {
   const baseUrl = `https://github.com/login/oauth/authorize`;
