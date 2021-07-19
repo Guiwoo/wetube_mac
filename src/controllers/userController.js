@@ -75,12 +75,29 @@ export const logout = (req, res) => {
 export const getEdit = (req, res) => {
   return res.render("editProfile", {
     pageTitle: "Edit Profile",
-    user: req.session.user,
   });
 };
 
-export const postEdit = (req, res) => {
-  return res.send("Edit profile");
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { name, email, username, location },
+  } = req;
+
+  const updatedUser = await userModel.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      email,
+      username,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = updatedUser;
+  return res.redirect("/users/edit");
 };
 
 export const startGithubLogin = (req, res) => {
