@@ -75,29 +75,37 @@ export const logout = (req, res) => {
 export const getEdit = (req, res) => {
   return res.render("editProfile", {
     pageTitle: "Edit Profile",
+    errorMessage: "",
   });
 };
 
 export const postEdit = async (req, res) => {
-  const {
-    session: {
-      user: { _id },
-    },
-    body: { name, email, username, location },
-  } = req;
+  try {
+    const {
+      session: {
+        user: { _id },
+      },
+      body: { name, email, username, location },
+    } = req;
 
-  const updatedUser = await userModel.findByIdAndUpdate(
-    _id,
-    {
-      name,
-      email,
-      username,
-      location,
-    },
-    { new: true }
-  );
-  req.session.user = updatedUser;
-  return res.redirect("/users/edit");
+    const updatedUser = await userModel.findByIdAndUpdate(
+      _id,
+      {
+        name,
+        email,
+        username,
+        location,
+      },
+      { new: true }
+    );
+    req.session.user = updatedUser;
+    return res.redirect("/users/edit");
+  } catch (e) {
+    return res.render("editProfile", {
+      pageTitle: "Edit Profile",
+      errorMessage: e ? `${e.keyValue.email} is already taken!` : "",
+    });
+  }
 };
 
 export const startGithubLogin = (req, res) => {

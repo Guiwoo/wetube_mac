@@ -3,6 +3,8 @@ extends base.pug
 block content 
     H4 Edit Profile
     form(method="POST")
+        if errorMessage 
+            span=errorMessage
         input(name="name",placeholder="Name", type="text",required, value=loggedInUser.name)
         input(name="email",placeholder="Email", type="email",required value=loggedInUser.email)
         input(name="username",placeholder="Username", type="text",required value=loggedInUser.username)

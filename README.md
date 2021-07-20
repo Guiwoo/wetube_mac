@@ -23,3 +23,7 @@ ex) name, description ,etc
 /videos/id/delete -> Delete video \* Do i need to make a new page ? , just giva a function on the detail video page;
 /videos/upload ->upload video
 ex) video file, name,discription,etc
+
+// if i wanna change username or email but the those are already taken?
+-exist ? can't change
+if the data comming form ? different data user session ?
