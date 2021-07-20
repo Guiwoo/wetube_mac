@@ -1,8 +1,10 @@
 import express from "express";
 import {
   finishGithubLogin,
+  getChangePassword,
   getEdit,
   logout,
+  postChangePassword,
   postEdit,
   startGithubLogin,
   userId,
@@ -15,6 +17,11 @@ userRouter.route("/edit").all(protectMiddleware).get(getEdit).post(postEdit);
 userRouter.get("/logout", protectMiddleware, logout);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
+userRouter
+  .route("/changePassword")
+  .all(protectMiddleware)
+  .get(getChangePassword)
+  .post(postChangePassword);
 userRouter.get("/:id", userId);
 
 export default userRouter;

@@ -1,4 +1,4 @@
-extends base.pug
+extends ../base.pug
 
 block content 
     H4 Edit Profile
@@ -10,3 +10,6 @@ block content
         input(name="username",placeholder="Username", type="text",required value=loggedInUser.username)
         input(name="location",placeholder="Location", type="text",required value=loggedInUser.location)
         input(type="submit", value="Update Profile")
+        if !loggedInUser.githubId
+            hr
+            a(href="changePassword") Change Password &rarr;
