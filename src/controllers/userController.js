@@ -101,9 +101,10 @@ export const postEdit = async (req, res) => {
     req.session.user = updatedUser;
     return res.redirect("/users/edit");
   } catch (e) {
+    const changing = e.keyValue.email ? e.keyValue.email : e.keyValue.username;
     return res.render("editProfile", {
       pageTitle: "Edit Profile",
-      errorMessage: e ? `${e.keyValue.email} is already taken!` : "",
+      errorMessage: e ? `${changing} is already taken!` : "",
     });
   }
 };
