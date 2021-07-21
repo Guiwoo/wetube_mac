@@ -2,9 +2,12 @@ extends ../base.pug
 
 block content 
     H4 Edit Profile
-    form(method="POST")
+    img(src=`/${loggedInUser.avatarUrl}`, width="100", height="100")
+    form(method="POST",enctype="multipart/form-data")
         if errorMessage 
             span=errorMessage
+        label(for="avatar") Avatar
+        input(type="file" id="avatar" name="avatar" accept="image/*")
         input(name="name",placeholder="Name", type="text",required, value=loggedInUser.name)
         input(name="email",placeholder="Email", type="email",required value=loggedInUser.email)
         input(name="username",placeholder="Username", type="text",required value=loggedInUser.username)
