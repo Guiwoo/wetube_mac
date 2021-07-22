@@ -12,7 +12,7 @@ import {
 import {
   protectMiddleware,
   publicOnlyMiddleware,
-  uploadMiddleWare,
+  avatarUploads,
 } from "../middlewares";
 
 const userRouter = express.Router();
@@ -21,7 +21,7 @@ userRouter
   .route("/edit")
   .all(protectMiddleware)
   .get(getEdit)
-  .post(uploadMiddleWare.single("avatar"), postEdit);
+  .post(avatarUploads.single("avatar"), postEdit);
 
 userRouter.get("/logout", protectMiddleware, logout);
 
@@ -34,6 +34,7 @@ userRouter
   .all(protectMiddleware)
   .get(getChangePassword)
   .post(postChangePassword);
-userRouter.get("/:id", userId);
+
+userRouter.get("/:id([0-9a-f]{24})", userId);
 
 export default userRouter;

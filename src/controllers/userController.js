@@ -2,7 +2,20 @@ import userModel from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 
-export const userId = (req, res) => res.send("My porfile");
+export const userId = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  const user = await userModel.findById(id);
+  try {
+    return res.render("users/myProfile", {
+      pageTitle: `${user.name}`,
+      user,
+    });
+  } catch (e) {
+    res.redirect("/");
+  }
+};
 
 export const getJoin = (req, res) => {
   return res.render("users/join", { pageTitle: "Join" });

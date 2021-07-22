@@ -1,4 +1,5 @@
 import videoModel from "../models/Video";
+import userModel from "../models/User";
 
 const fakeUser = {
   loggedin: false,
@@ -36,10 +37,10 @@ export const watch = async (req, res) => {
     const {
       params: { id },
     } = req;
-    const video = await videoModel.findById(id);
-    res.render("watch", { pageTitle: video.title, fakeUser, video });
+    const video = await videoModel.findById(id).populate("owner");
+    res.render("videos/watch", { pageTitle: video.title, video });
   } catch (error) {
-    res.status(400).render("404", { pageTitle: "Can't found video", fakeUser });
+    res.status(400).render("404", { pageTitle: "Can't found video" });
   }
 };
 
@@ -49,7 +50,11 @@ export const getHandleEdit = async (req, res) => {
       params: { id },
     } = req;
     const video = await videoModel.findById(id);
-    res.render("edit", { pageTitle: `Edit: ${video.title} `, fakeUser, video });
+    res.render("video/edit", {
+      pageTitle: `Edit: ${video.title} `,
+      fakeUser,
+      video,
+    });
   } catch (error) {
     res.status(400).render("404", { pageTitle: "Can't Edit" });
   }
@@ -83,26 +88,31 @@ export const deleteVideo = async (req, res) => {
 };
 
 export const getUpload = (req, res) => {
-  return res.render("upload", { pageTitle: "Upload Video", fakeUser });
+  return res.render("videos/upload", { pageTitle: "Upload Video" });
   // what is different between and remove
 };
 
 export const postUpload = async (req, res) => {
-  //will add a video to the videos array
-  const { title, description, hashtags } = req.body;
-  console.log(title, description, hashtags);
+  const {
+    user: { _id },
+  } = req.session;
+  const {
+    body: { title, description, hashtags },
+    file: { path },
+  } = req;
   try {
     await videoModel.create({
       title,
       description,
+      fileUrl: path,
       hashtags: videoModel.formatHash(hashtags),
+      owner: _id,
     });
     return res.redirect("/");
   } catch (error) {
-    return status(400).res.render("404", {
+    return status(404).res.render("404", {
       pageTitle: `Error`,
-      fakeUser,
-      error,
+      errorMessage: "All fileds are required",
     });
   }
 };
