@@ -1,16 +1,19 @@
 import userModel from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
+import videoModel from "../models/Video";
 
 export const userId = async (req, res) => {
   const {
     params: { id },
   } = req;
-  const user = await userModel.findById(id);
   try {
+    const user = await userModel.findById(id).populate("videos");
+    console.log(user);
     return res.render("users/myProfile", {
       pageTitle: `${user.name}`,
       user,
+      videos: user.videos,
     });
   } catch (e) {
     res.redirect("/");

@@ -38,7 +38,11 @@ export const watch = async (req, res) => {
       params: { id },
     } = req;
     const video = await videoModel.findById(id).populate("owner");
-    res.render("videos/watch", { pageTitle: video.title, video });
+    res.render("videos/watch", {
+      pageTitle: video.title,
+      video,
+      owner: video.owner,
+    });
   } catch (error) {
     res.status(400).render("404", { pageTitle: "Can't found video" });
   }
@@ -48,9 +52,15 @@ export const getHandleEdit = async (req, res) => {
   try {
     const {
       params: { id },
+      session: {
+        user: { _id },
+      },
     } = req;
     const video = await videoModel.findById(id);
-    res.render("video/edit", {
+    if (String(video.owner) !== _id) {
+      return res.status(403).redirect("/");
+    }
+    res.render("videos/edit", {
       pageTitle: `Edit: ${video.title} `,
       fakeUser,
       video,
@@ -80,11 +90,26 @@ export const postHandleEdit = async (req, res) => {
 };
 
 export const deleteVideo = async (req, res) => {
-  const {
-    params: { id },
-  } = req;
-  await videoModel.findByIdAndDelete(id);
-  return res.redirect("/");
+  try {
+    const {
+      params: { id },
+      session: {
+        user: { _id },
+      },
+    } = req;
+    const video = await videoModel.findById(id);
+    if (String(video.owner) !== _id) {
+      return res.status(403).redirect("/");
+    }
+    await videoModel.findByIdAndDelete(id);
+    const user = await userModel.findById(_id);
+    user.videos.splice(user.videos.indexOf(id), 1);
+    user.save();
+    return res.redirect("/");
+    console.log(req.session.user);
+  } catch (e) {
+    return res.status(404).render("404", { pageTitle: "Video not found" });
+  }
 };
 
 export const getUpload = (req, res) => {
@@ -101,13 +126,16 @@ export const postUpload = async (req, res) => {
     file: { path },
   } = req;
   try {
-    await videoModel.create({
+    const newVideo = await videoModel.create({
       title,
       description,
       fileUrl: path,
       hashtags: videoModel.formatHash(hashtags),
       owner: _id,
     });
+    const user = await userModel.findById(_id);
+    user.videos.push(newVideo._id);
+    user.save();
     return res.redirect("/");
   } catch (error) {
     return status(404).res.render("404", {
