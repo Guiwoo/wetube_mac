@@ -27,3 +27,9 @@ ex) video file, name,discription,etc
 // if i wanna change username or email but the those are already taken?
 -exist ? can't change
 if the data comming form ? different data user session ?
+
+webpack
+1- Installed webpack , webpack-cli
+2- Set up webpack config.js and makd file for website
+3- Put soem bable thigns on config.file
+4- babel loader
