@@ -3,7 +3,17 @@
 @import "./config/_reset.scss";
 //Components
 @import "./components/header.scss";
+@import "./components/footer.scss";
+@import "./components/video.scss";
+@import "./components/shared.scss";
+@import "./components/forms.scss";
+@import "./components/social-login.scss";
 //screens
+@import "./screens/home.scss";
+@import "./screens/search.scss";
+@import "./screens/profile.scss";
+@import "./screens/edit-profile.scss";
+//Defaults
 a {
   color: inherit;
   text-decoration: none;
@@ -13,4 +23,10 @@ body {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: $bg;
   color: black;
+}
+main {
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 50px;
 }

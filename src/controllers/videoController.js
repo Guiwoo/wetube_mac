@@ -8,8 +8,11 @@ const fakeUser = {
 
 export const home = async (req, res) => {
   try {
-    const videos = await videoModel.find({}).sort({ createdAt: "desc" });
-    return res.render("home", { pageTitle: "Home", fakeUser, videos });
+    const videos = await videoModel
+      .find({})
+      .sort({ createdAt: "desc" })
+      .populate("owner");
+    return res.render("home", { pageTitle: "Home", videos });
   } catch (error) {
     return res.render("Server-Error", { error });
   }
@@ -21,11 +24,13 @@ export const search = async (req, res) => {
   } = req;
   let videos = [];
   try {
-    videos = await videoModel.find({
-      title: {
-        $regex: new RegExp(keyword, "i"),
-      },
-    });
+    videos = await videoModel
+      .find({
+        title: {
+          $regex: new RegExp(`${keyword}$`, "i"),
+        },
+      })
+      .populate("owner");
   } catch (error) {
     return res.status(400).render("404", { pageTitle: "Error", error });
   }

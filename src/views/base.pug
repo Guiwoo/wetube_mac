@@ -8,8 +8,8 @@ html(lang="ko")
         link(rel="stylesheet", href="/static/css/styles.css")
         title #{pageTitle}  | Wetube
     body
+        include partials/header.pug 
         main
-            include partials/header.pug 
             block content  
-            include partials/footer.pug
+        include partials/footer.pug
     script(src="/static/js/main.js")
