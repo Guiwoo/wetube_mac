@@ -4,7 +4,7 @@ header {
   justify-content: space-between;
   align-items: center;
   .header__logo {
-    color: $myColor;
+    color: $red;
     font-size: 38px;
   }
   ul {
@@ -23,7 +23,7 @@ header {
   }
   .header__btn {
     background-color: white;
-    color: black;
+    color: $bg;
     padding: 5px 10px;
     border-radius: 5px;
   }
