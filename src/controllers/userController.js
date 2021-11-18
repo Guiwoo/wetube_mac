@@ -8,8 +8,13 @@ export const userId = async (req, res) => {
     params: { id },
   } = req;
   try {
-    const user = await userModel.findById(id).populate("videos");
-    console.log(user);
+    const user = await userModel.findById(id).populate({
+      path: "videos",
+      populate: {
+        path: "owner",
+        model: "User",
+      },
+    });
     return res.render("users/myProfile", {
       pageTitle: `${user.name}`,
       user,
