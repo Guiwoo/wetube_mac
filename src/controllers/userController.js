@@ -1,7 +1,6 @@
 import userModel from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
-import videoModel from "../models/Video";
 
 export const userId = async (req, res) => {
   const {
@@ -89,7 +88,10 @@ export const postLogin = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  req.session.destroy();
+  req.session.user = null;
+  res.locals.loggedInUser = req.session.user;
+  req.session.loggedIn = false;
+  req.flash("info", "Logged Out");
   return res.redirect("/");
 };
 
@@ -122,6 +124,7 @@ export const postEdit = async (req, res) => {
       { new: true }
     );
     req.session.user = updatedUser;
+    req.flash("info", "Updated Profile");
     return res.redirect("/users/edit");
   } catch (e) {
     const changing = e.keyValue.email ? e.keyValue.email : e.keyValue.username;
@@ -237,5 +240,6 @@ export const postChangePassword = async (req, res) => {
   user.password = newPassword;
   await user.save();
   req.session.password = user.password;
+  req.flash("info", "Password Changed");
   return res.redirect("/users/logout");
 };

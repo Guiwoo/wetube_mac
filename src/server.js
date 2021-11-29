@@ -9,6 +9,7 @@ import MongoStore from "connect-mongo";
 import apiRouter from "./routers/apiRouter";
 import favicon from "serve-favicon";
 import path from "path";
+import flash from "express-flash";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
+app.use(flash());
 app.use(localMiddleware);
 app.use("/uploads", express.static("uploads"));
 app.use(

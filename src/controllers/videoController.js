@@ -63,6 +63,7 @@ export const getHandleEdit = async (req, res) => {
     } = req;
     const video = await videoModel.findById(id);
     if (String(video.owner) !== _id) {
+      req.flash("error", "Not authorzied");
       return res.status(403).redirect("/");
     }
     res.render("videos/edit", {
@@ -104,12 +105,14 @@ export const deleteVideo = async (req, res) => {
     } = req;
     const video = await videoModel.findById(id);
     if (String(video.owner) !== _id) {
+      req.flash("error", "Not authrozied");
       return res.status(403).redirect("/");
     }
     await videoModel.findByIdAndDelete(id);
     const user = await userModel.findById(_id);
     user.videos.splice(user.videos.indexOf(id), 1);
     user.save();
+    req.flash("info", "Video was deleted");
     return res.redirect("/");
     console.log(req.session.user);
   } catch (e) {
@@ -142,6 +145,7 @@ export const postUpload = async (req, res) => {
     const user = await userModel.findById(_id);
     user.videos.push(newVideo._id);
     user.save();
+    req.flash("info", "Uploaded");
     return res.redirect("/");
   } catch (error) {
     return status(404).res.render("404", {
