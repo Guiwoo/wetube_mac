@@ -1,5 +1,7 @@
 import videoModel from "../models/Video";
 import userModel from "../models/User";
+import commentModel from "../models/CommentSection";
+import { ids } from "webpack";
 
 const fakeUser = {
   loggedin: false,
@@ -42,7 +44,10 @@ export const watch = async (req, res) => {
     const {
       params: { id },
     } = req;
-    const video = await videoModel.findById(id).populate("owner");
+    const video = await videoModel
+      .findById(id)
+      .populate("owner")
+      .populate("comments");
     res.render("videos/watch", {
       pageTitle: video.title,
       video,
@@ -167,7 +172,22 @@ export const registerView = async (req, res) => {
 };
 
 export const createComment = async (req, res) => {
-  console.log(req.params);
-  console.log(req.body);
-  return res.end();
+  const {
+    session: { user },
+    body: { text },
+    params: { id },
+  } = req;
+
+  const video = await videoModel.findById(id);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+  const comment = await commentModel.create({
+    text,
+    owner: user._id,
+    video: id,
+  });
+  video.comments.push(comment._id);
+  video.save();
+  return res.sendStatus(201);
 };

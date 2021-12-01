@@ -17,6 +17,7 @@ const handleSubmit = (event) => {
     },
     body: JSON.stringify({ text }),
   });
+  textarea.value = "";
 };
 
 form.addEventListener("submit", handleSubmit);
