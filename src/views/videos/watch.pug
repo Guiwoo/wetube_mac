@@ -29,17 +29,21 @@ block content
             a(href=`${video.id}/edit`) Edit Video &rarr;
             br
             a(href=`${video.id}/delete`) Delete Video &rarr;
-    if loggedIn
-        div.video__add-comments
-            form.video__comment-form#commentForm
-                textarea(cols="30",rows="10",placeholder="Write on a comment..")
-                button Add Comment
-    .video__comments 
-        ul 
-            each comment in video.comments.reverse()
-                li.video__comment
-                    i.fas.fa-comment
-                    |  #{comment.text}
+        div.video__comment-container
+            div.video__add-comments
+            if loggedIn
+                form.video__comment-form#commentForm(style={position:"relative"})
+                    textarea(cols="50",rows="10",placeholder="Write on a comment..")
+                    button.add_btn(style={background:"transparent",border:"none",position:"absolute",right:0,bottom:0,color:"white"}) 🌈 Add a Comment🌈
+            .video__comments 
+                ul 
+                    each comment in video.comments.reverse()
+                        li.video__comment(data-id=comment.id)
+                            div 
+                                i.fas.fa-comment
+                                span #{comment.text}
+                            if String(comment.owner._id) === String(loggedInUser._id)
+                                i.fas.fa-trash-alt#delete_btn
 
 block scripts
     script(src="/static/js/videoPlayer.js")

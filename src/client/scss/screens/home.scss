@@ -18,14 +18,43 @@
     }
   }
 }
+.video__comment-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  .video__add-comments {
+    display: flex;
+    justify-content: left;
+    .video__comment-form {
+      width: 100%;
+      position: relative;
+      textarea {
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+      button {
+        position: absolute;
+        background-color: transparent;
+        border: none;
+        right: 0;
+        bottom: 0;
+        font-size: 22px;
+      }
+    }
+  }
+}
 .video__comments {
   display: flex;
   flex-direction: column;
-  max-width: 320px;
+  max-width: 400px;
   width: 100%;
   margin: 0 auto;
   margin-top: 20px;
+  overflow: auto;
+  height: 230px;
   .video__comment {
+    display: flex;
+    justify-content: space-between;
     padding: 10px;
     border-radius: 9999px;
     background-color: white;
