@@ -1,4 +1,19 @@
 import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+
+const s3 = new aws.S3({
+  credentials: {
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET,
+  },
+});
+
+const multerUploader = multerS3({
+  s3: s3,
+  bucket: "guiwoo-wetube-updated",
+  acl: "public-read",
+});
 
 export const localMiddleware = (req, res, next) => {
   res.locals.siteName = "Wetube";
@@ -30,6 +45,7 @@ export const avatarUploads = multer({
   limits: {
     fileSize: 10485760,
   },
+  storage: multerUploader,
 });
 
 export const videoUploads = multer({
@@ -37,4 +53,5 @@ export const videoUploads = multer({
   limits: {
     fileSize: 10485760,
   },
+  storage: multerUploader,
 });
