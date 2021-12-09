@@ -62,7 +62,7 @@ export const postJoin = async (req, res) => {
 };
 
 export const getLogin = (req, res) => {
-  return res.render("users/Login", { pageTitle: "Login" });
+  return res.render("users/login", { pageTitle: "Login" });
 };
 
 export const postLogin = async (req, res) => {
