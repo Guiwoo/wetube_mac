@@ -2,6 +2,8 @@ import multer from "multer";
 import multerS3 from "multer-s3";
 import aws from "aws-sdk";
 
+const isHeroku = process.env.NODE_ENV === "production";
+
 const s3 = new aws.S3({
   credentials: {
     accessKeyId: process.env.AWS_ID,
@@ -9,16 +11,25 @@ const s3 = new aws.S3({
   },
 });
 
-const multerUploader = multerS3({
+const s3ImageUploader = multerS3({
   s3: s3,
-  bucket: "guiwoo-wetube-updated",
+  bucket: "guiwoo-wetube-updated/images",
   acl: "public-read",
+  contentType: multerS3.AUTO_CONTENT_TYPE,
+});
+
+const s3VideoUploadr = multerS3({
+  s3: s3,
+  bucket: "guiwoo-wetube-updated//videos",
+  acl: "public-read",
+  contentType: multerS3.AUTO_CONTENT_TYPE,
 });
 
 export const localMiddleware = (req, res, next) => {
   res.locals.siteName = "Wetube";
   res.locals.loggedIn = Boolean(req.session.loggedIn);
   res.locals.loggedInUser = req.session.user || {};
+  res.locals.isHeroku = isHeroku;
   next();
 };
 
@@ -45,7 +56,7 @@ export const avatarUploads = multer({
   limits: {
     fileSize: 10485760,
   },
-  storage: multerUploader,
+  storage: isHeroku ? s3ImageUploader : undefined,
 });
 
 export const videoUploads = multer({
@@ -53,5 +64,5 @@ export const videoUploads = multer({
   limits: {
     fileSize: 10485760,
   },
-  storage: multerUploader,
+  storage: isHeroku ? s3VideoUploadr : undefined,
 });
