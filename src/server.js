@@ -7,8 +7,6 @@ import videoRouter from "./routers/videoRouter";
 import { localMiddleware } from "./middlewares";
 import MongoStore from "connect-mongo";
 import apiRouter from "./routers/apiRouter";
-import favicon from "serve-favicon";
-import path from "path";
 import flash from "express-flash";
 
 const app = express();
