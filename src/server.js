@@ -42,8 +42,6 @@ app.use((req, res, next) => {
   res.header("Cross-Origin-Opener-Policy", "same-origin");
   next();
 });
-app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
-
 app.use("/", rootRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);
